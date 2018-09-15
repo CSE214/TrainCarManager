@@ -14,6 +14,7 @@ public class TrainLinkedList {
 	private TrainCarNode head; // Head of the linked list
 	private TrainCarNode tail; // Tail of the linked list
 	private TrainCarNode cursor; // Node currently referenced by cursor
+	
 	private int carCount; // Number of cars in list
 	private double totalLength; // Total length of all cars in list
 	private double totalValue; // Total value of all cars in list
@@ -39,9 +40,41 @@ public class TrainLinkedList {
 		this.totalLength=0;
 		this.totalValue=0;
 		this.totalWeight=0;
-		this.isDangerous=false;
+		this.dangerCount=0;
 	}
-	
+	/**
+	 * Updates the data from either removing or setting a car.
+	 * 
+	 * @param car
+	 * 	The car that is being set or removed.
+	 * @param mode
+	 * 	Tells the function whether the car is set or removed.
+	 * 
+	 * <dl>
+	 * <dt>Postconditions</dt>
+	 * <dd>The data now accounts for the new/missing car.</dd>
+	 * </dl>
+	 * 
+	 */
+	public void updateNumberData(TrainCar car, String mode) {
+		if (mode == "-") {
+			carCount -= 1;
+			totalLength -= car.getLength();
+			totalValue -= car.getLoad().getValue();
+			totalWeight -= car.getWeight() + car.getLoad().getWeight(); 
+			if(car.getLoad().isDangerous()) {
+				dangerCount -= 1;
+			}
+		} else if (mode == "+") {
+			carCount += 1;
+			totalLength += car.getLength();
+			totalValue += car.getLoad().getValue();
+			totalWeight += car.getWeight() + car.getLoad().getWeight();
+			if(car.getLoad().isDangerous()) {
+				dangerCount += 1;
+			}
+		}
+	}
 	/**
 	 * Returns a reference to the <code>TrainCar</code> at the node currently referenced by the cursor.
 	 * 
@@ -57,7 +90,6 @@ public class TrainLinkedList {
 	 * 	if the cursor is null
 	 */
 	public TrainCar getCursorData(){
-		
 		return cursor.getCar();
 	}
 	/**
@@ -78,27 +110,10 @@ public class TrainLinkedList {
 	 * 
 	 */
 	public void setCursorData(TrainCar car) {
-		private double totalLength;
-		private double totalValue; 
-		private double totalWeight;
+		updateNumberData(cursor.getCar(), "-");
 		this.cursor.setCar(car);
+		updateNumberData(cursor.getCar(), "+");
 	}
-	
-	public void updateNumberData(TrainCar car, String mode) {
-		if (mode == "-") {
-			carCount -= 1;
-			totalLength -= car.getLength();
-			totalValue -= car.getLoad().getValue();
-			totalWeight -= car.getWeight() + car.getLoad().getWeight(); 
-		} else if (mode == "+") {
-			carCount += 1;
-			totalLength += car.getLength();
-			totalValue += car.getLoad().getValue();
-			totalWeight += car.getWeight() + car.getLoad().getWeight(); 
-		}
-	}
-	
-	public void updateDangerStatus 
 	/**
 	 * Moves the cursor to point at the next <code>TrainCarNode</code>.
 	 * 
@@ -167,33 +182,103 @@ public class TrainLinkedList {
 	 */
 	public void insertAfterCursor(TrainCar newCar) {
 		TrainCarNode newCarNode = new TrainCarNode(newCar);
+		updateNumberData(newCar, "+");
 		
-		newCarNode.setNext(cursor.getNext());
-		cursor.getNext().setPrev(newCarNode);
+		if (cursor.getNext() != null) {
+			newCarNode.setNext(cursor.getNext());
+			cursor.getNext().setPrev(newCarNode);
+		}
 		
 		newCarNode.setPrev(cursor);
 		cursor.setNext(newCarNode);
-		
-		carCount += 1;
+
+		try {
+			cursorForward();
+		} catch (CursorBoundsException e) {
+			System.out.println("The cursor is out of bounds.");
+		}
 	}
+	/**
+	 * Removes the <code>TrainCarNode</code> referenced by the cursor and returns the <code>TrainCar</code> contained 
+	 * within the node.
+	 * 
+	 * <dl>
+	 * <dt>Preconditions</dt>
+	 * <dd>The cursor is not null.</dd>
+	 * </dl>
+	 * 
+	 * <dl>
+	 * <dt>Postconditions</dt>
+	 * <dd>
+	 * The <code>TrainCarNode</code> referenced by the cursor has been removed from the train. The cursor now references the
+	 * next node, or the previous node if the next node doesn't exist.
+	 * </dd>
+	 * </dl>
+	 * 
+	 * @return
+	 */
 	public TrainCar removeCursor() {
-		
+		cursor.getPrev().setNext(cursor.getNext());
+		cursor.getNext().setPrev(cursor.getPrev());
+		TrainCarNode removedNode = cursor;
+		try {
+			cursorForward();
+		} catch (CursorBoundsException e) {
+			try {
+				cursorBackward();
+			} catch (CursorBoundsException e1) {
+				System.out.println("The linked list is now empty.");
+			}
+		} 
+		updateNumberData(removedNode.getCar(), "-");
+		return removedNode.getCar();
 	}
-	
+	/**
+	 * Determines the number of <code>TrainCar</code> objects currently on the train.
+	 * 
+	 * @return
+	 * 	The number of <code>TrainCar</code> objects on this train.
+	 */
 	public int size() {
-		
+		return carCount;
 	}
+	/**
+	 * Determines the total length of the train in meters.
+	 * 
+	 * @return
+	 * 	The sum of the lengths of the cars.
+	 */
 	public double getLength() {
-		
+		return totalLength;
 	}
+	/**
+	 * Determines the total value of products on the train.
+	 * 
+	 * @return
+	 * 	The sum of the values of each car on the train.
+	 */
 	public double getValue() {
-		
+		return totalValue;
 	}
+	/**
+	 * Determines the total weight of the train. Note that the weight of the train 
+	 * is the sum of the weights of each empty <code>TrainCar</code>, plus the weight of the 
+	 * <code>ProductLoad</code> carried by that car.
+	 * 
+	 * @return
+	 * 	The total weight of the train.
+	 */
 	public double getWeight() {
-		
+		return totalWeight;
 	}
-	public double isDangerous() {
-		
+	/**
+	 * Determines if there is a car on the train that carries a dangerous load.
+	 * 
+	 * @return
+	 * 	True if there is a dangerous car, and false otherwise
+	 */
+	public boolean isDangerous() {
+		return dangerCount > 0;
 	}
 	public void findProduct() {
 		
