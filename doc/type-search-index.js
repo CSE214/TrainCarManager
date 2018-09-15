@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"courseplanner","l":"Course"},{"p":"courseplanner","l":"FullPlannerException"},{"p":"courseplanner","l":"NegativeNumberException"},{"p":"courseplanner","l":"Planner"},{"p":"courseplanner","l":"PlannerManager"}]

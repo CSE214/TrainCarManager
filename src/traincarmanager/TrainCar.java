@@ -51,6 +51,11 @@ public class TrainCar {
 	 * @param weight
 	 * 	The weight of this instance
 	 * 
+	 * <dl>
+	 * <dt>Preconditions</dt>
+	 * <dd>Length or weight should be a positive number.</dd>
+	 * </dl>
+	 * 
 	 * @throws NotPositiveNumberException
 	 * 	If the passed length or weight is not positive
 	 */

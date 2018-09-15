@@ -2,7 +2,7 @@ package traincarmanager;
 
 /**
 * <code>NegativeNumberException</code> is thrown when a negative number is 
-* entered as input for a function that takes non-negative values.
+* entered as input for a function that only takes non-negative values.
 *    
 *
 * @author Sayan Sivakumaran
@@ -11,7 +11,7 @@ package traincarmanager;
 **/
 
 public class NegativeNumberException extends Exception {
-	
+	private static final long serialVersionUID = -1006030493743069075L;
 	/**
 	 * Returns an instance of <code>NegativeNumberException</code>.
 	 */
@@ -28,7 +28,5 @@ public class NegativeNumberException extends Exception {
 	public NegativeNumberException(String message) {
 		super(message);
 	}
-
-	private static final long serialVersionUID = -1006030493743069075L;
 
 }
