@@ -318,8 +318,14 @@ public class TrainLinkedList {
 	 * 	The name of the <code>ProductLoad</code> to find on the train.
 	 */
 	public void findProduct(String name) {
-		getProductData(name);
-		//PRINT SHIT HERE
+		int[] productData = getProductData(name);
+		String header = String.format("%25s%15s%15s%15s", "Name", "Weight (t)", "Value ($)", "Dangerous");
+		String border = "=========================================================================================";
+		String productString = ProductLoad.toTableString(name, productData[0], productData[1], productData[2] == 1);
+		
+		System.out.println(header);
+		System.out.println(border);
+		System.out.println(productString);
 	}
 	public void printManifest() {
 		//PRINT SHIT HERE
