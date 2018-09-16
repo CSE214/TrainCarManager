@@ -280,17 +280,74 @@ public class TrainLinkedList {
 	public boolean isDangerous() {
 		return dangerCount > 0;
 	}
-	public void findProduct() {
+	/**
+	 * Searches the list for all <code>ProductLoad</code> objects with the indicated name and sums together their weight 
+	 * and value (Also keeps track of whether the product is dangerous or not), then returns an array containing data
+	 * about the product.
+	 * 
+	 * @name
+	 * 	The name of the <code>ProductLoad</code> to find on the train.
+	 * 
+	 * @return
+	 * 	An array of the form [totalWeight, totalValue, isDangerous]
+	 */
+	public int [] getProductData(String name) {
+		int totalWeight = 0;
+		int totalValue = 0;
+		int isDangerous = 0; // Set 0 if false, 1 if true
+		TrainCarNode currentCarNode = head;
 		
+		while (currentCarNode != null) {
+			ProductLoad product = currentCarNode.getCar().getLoad();
+			if (product.getName() == name) {
+				totalWeight += product.getWeight();
+				totalValue += product.getValue();
+				if (product.isDangerous()) isDangerous = 1;
+			}
+			currentCarNode = currentCarNode.getNext();
+		}
+		int[] productData = {totalWeight, totalValue, isDangerous};
+		return productData;
+	}
+	/**
+	 * Searches the list for all <code>ProductLoad</code> objects with the indicated name and sums together their weight 
+	 * and value (Also keeps track of whether the product is dangerous or not), then prints a single 
+	 * <code>ProductLoad</code> record to the console.
+	 * 
+	 * @name
+	 * 	The name of the <code>ProductLoad</code> to find on the train.
+	 */
+	public void findProduct(String name) {
+		getProductData(name);
+		//PRINT SHIT HERE
 	}
 	public void printManifest() {
-		
+		//PRINT SHIT HERE
 	}
+	/**
+	 * Removes all dangerous cars from the train, maintaining the order of the cars in the train.
+	 * 
+	 * <dl>
+	 * <dt>Postconditions</dt>
+	 * <dd>
+	 * All dangerous cars have been removed from this train. Furthermore, the order of all non-dangerous cars must be maintained 
+	 * upon the completion of this method. 
+	 * </dd>
+	 * </dl>
+	 */
 	public void removeDangerousCars() {
+		TrainCarNode currentCarNode = head;
 		
+		while (currentCarNode != null) {
+			if(currentCarNode.getCar().getLoad().isDangerous()) {
+				currentCarNode.getPrev().setNext(currentCarNode.getNext());
+				currentCarNode.getNext().setPrev(currentCarNode.getPrev());
+			} 
+			currentCarNode = currentCarNode.getNext();
+		}
 	}
 	@Override
 	public String toString() {
-		
+		//PRINT SHIT HERE
 	}
 }
