@@ -319,7 +319,7 @@ public class TrainLinkedList {
 	 */
 	public void findProduct(String name) {
 		int[] productData = getProductData(name);
-		String header = String.format("%25s%15s%15s%15s", "Name", "Weight (t)", "Value ($)", "Dangerous");
+		String header = ProductLoad.makeTableHeader();
 		String border = "=========================================================================================";
 		String productString = ProductLoad.toTableString(name, productData[0], productData[1], productData[2] == 1);
 		
@@ -327,6 +327,10 @@ public class TrainLinkedList {
 		System.out.println(border);
 		System.out.println(productString);
 	}
+	/**
+	 * Prints a neatly formatted table of the car number, car length, car weight, load name, load weight, 
+	 * load value, and load dangerousness for all of the car on the train.
+	 */
 	public void printManifest() {
 		//PRINT SHIT HERE
 	}
@@ -352,8 +356,20 @@ public class TrainLinkedList {
 			currentCarNode = currentCarNode.getNext();
 		}
 	}
+	/**
+	 * Returns a neatly formatted String representation of the train.
+	 * 
+	 * @returns 
+	 * 	A neatly formatted string containing information about the train, including it's size (number of cars), 
+	 *  length in meters, weight in tons, value in dollars, and whether it is dangerous or not.
+	 */
 	@Override
 	public String toString() {
-		//PRINT SHIT HERE
+		return "Train: " 
+				+ carCount + " cars, " 
+				+ totalLength + " meters, " 
+				+ totalWeight + " tons, $" 
+				+ String.format("%.2f", totalValue) + " value, " 
+				+ (dangerCount > 0 ? " dangerous." : " not dangerous.");
 	}
 }

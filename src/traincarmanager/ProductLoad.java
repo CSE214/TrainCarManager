@@ -57,12 +57,12 @@ public class ProductLoad {
 	 * @param weight 
 	 * 	The new weight to set. Should be at least 0.
 	 * 
-	 * @throws NegativeNumberException
-	 * 	If the weight parameter is negative.
+	 * @throws NotPositiveNumberException
+	 * 	If the weight parameter is not positive.
 	 */
-	public void setWeight(double weight) throws NegativeNumberException {
-		if (weight < 0) {
-			throw new NegativeNumberException("Weight should not be negative.");
+	public void setWeight(double weight) throws NotPositiveNumberException {
+		if (weight <= 0) {
+			throw new NotPositiveNumberException("Weight should be positive.");
 		}
 		this.weight = weight;
 	}
@@ -77,12 +77,12 @@ public class ProductLoad {
 	 * @param value 
 	 * 	The new value to set. Should be at least 0.
 	 * 
-	 * @throws NegativeNumberException
-	 * 	If the value parameter is negative.
+	 * @throws NotPositiveNumber Exception
+	 * 	If the value parameter is not positive.
 	 */
-	public void setValue(double value) throws NegativeNumberException {
-		if (value < 0) {
-			throw new NegativeNumberException("Value should not be negative.");
+	public void setValue(double value) throws NotPositiveNumberException {
+		if (value <= 0) {
+			throw new NotPositiveNumberException("Value should be positive.");
 		}
 		this.value = value;
 	}
@@ -102,6 +102,16 @@ public class ProductLoad {
 	}
 	
 	/**
+	 * Forms a header for tables containing <code>ProductLoad</code> information
+	 * 
+	 * @return
+	 * 	A header for table containing <code>ProductLoad</code> information
+	 */
+	public static String makeTableHeader() {
+		return String.format("%25s%15s%15s%15s", "Name", "Weight (t)", "Value ($)", "Dangerous");
+	}
+	
+	/**
 	 * Returns an instance of <code>ProductLoad</code>
 	 * 
 	 * @param name
@@ -112,8 +122,16 @@ public class ProductLoad {
 	 * 	The value of the new instance.
 	 * @param isDangerous
 	 * 	The danger status of the new instance.
+	 * 
+	 * @throws NotPositiveNumberException
+	 * 	If the weight or value parameter is not positive.
 	 */
-	public ProductLoad(String name, double weight, double value, boolean isDangerous) {
+	public ProductLoad(String name, double weight, double value, boolean isDangerous) throws NotPositiveNumberException {
+		if (weight <= 0) {
+			throw new NotPositiveNumberException("Weight should be positive.");
+		} else if (value <= 0) {
+			throw new NotPositiveNumberException("Value should be positive.");
+		}
 		this.name = name;
 		this.weight = weight;
 		this.value = value;

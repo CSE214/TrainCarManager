@@ -103,4 +103,31 @@ public class TrainCar {
 		return this.load == null;
 	}
 	
+	/**
+	 * Forms a header for tables containing <code>TrainCar</code> information
+	 * 
+	 * @return
+	 * 	A header for table containing <code>TrainCar</code> information
+	 */
+	public static String makeTableHeader() {
+		return String.format("%3s%15s%15s", "Num", "Length (m)", "Weight (t)");
+	}
+	
+	/**
+	 * Forms a string using car data that can be used to print tables.
+	 * 
+	 * @param num
+	 * 	car position in train list (starts at 1)
+	 * @param length
+	 * 	length of car
+	 * @param weight
+	 * 	weight of car by itself
+	 * 
+	 * @return
+	 * 	a table-friendly string representation of the car
+	 */
+	public static String toTableString(int num, double length, double weight) {
+		return String.format("%3s%15s%15s", num, length, weight);
+	}
+	
 }
