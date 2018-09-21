@@ -368,25 +368,27 @@ public class TrainLinkedList {
 	 * load value, and load dangerousness for all of the car on the train.
 	 */
 	public void printManifest() {
-		System.out.println(String.format("%-38s%-65s", "CAR:", "LOAD:"));
-		System.out.println(TrainCar.makeTableHeader() + "  |  " + ProductLoad.makeTableHeader());
-		System.out.println("===================================+======================================================================");
+		System.out.println("  " + String.format("%-38s%-65s", "CAR:", "LOAD:"));
+		System.out.println("  " + TrainCar.makeTableHeader() + "  |  " + ProductLoad.makeTableHeader());
+		System.out.println("  ===================================+======================================================================");
 		
 		TrainCarNode currentNode = head;
 		int loopCounter = 1;
 		while (currentNode != null){
+			String currentNodeMarker = "  ";
+			if(currentNode == cursor) currentNodeMarker = "->";
 			if (currentNode.getCar().getLoad() == null) {
 				String name = "Empty";
 				double weight = 0;
-				double value = 0;
+				double value = 0;;
 				boolean isDangerous = false;
-				System.out.println(TrainCar.toTableString(loopCounter, currentNode.getCar().getLength(), currentNode.getCar().getWeight()) + "  |  " + ProductLoad.toTableString(name, weight, value, isDangerous));
+				System.out.println(currentNodeMarker + TrainCar.toTableString(loopCounter, currentNode.getCar().getLength(), currentNode.getCar().getWeight()) + "  |  " + ProductLoad.toTableString(name, weight, value, isDangerous));
 			} else {
 				String name = currentNode.getCar().getLoad().getName();
 				double weight = currentNode.getCar().getLoad().getWeight();
 				double value = currentNode.getCar().getLoad().getValue();
 				boolean isDangerous = currentNode.getCar().getLoad().isDangerous();
-				System.out.println(TrainCar.toTableString(loopCounter, currentNode.getCar().getLength(), currentNode.getCar().getWeight()) + "  |  " + ProductLoad.toTableString(name, weight, value, isDangerous));
+				System.out.println(currentNodeMarker + TrainCar.toTableString(loopCounter, currentNode.getCar().getLength(), currentNode.getCar().getWeight()) + "  |  " + ProductLoad.toTableString(name, weight, value, isDangerous));
 			}
 			currentNode = currentNode.getNext();
 			loopCounter += 1;
@@ -405,11 +407,24 @@ public class TrainLinkedList {
 	 */
 	public void removeDangerousCars() {
 		TrainCarNode currentCarNode = head;
+		System.out.println("This runs");
 		
 		while (currentCarNode != null) {
-			if(currentCarNode.getCar().getLoad().isDangerous()) {
-				currentCarNode.getPrev().setNext(currentCarNode.getNext());
-				currentCarNode.getNext().setPrev(currentCarNode.getPrev());
+			if(currentCarNode.getCar().getLoad() != null && currentCarNode.getCar().getLoad().isDangerous()) {
+				if (currentCarNode.getPrev() != null) currentCarNode.getPrev().setNext(currentCarNode.getNext());
+				if (currentCarNode.getNext() != null) currentCarNode.getNext().setPrev(currentCarNode.getPrev());
+				if (currentCarNode == cursor) {
+					try {
+						cursorForward();
+					} catch (CursorBoundsException e) {
+						try {
+							cursorBackward();
+						} catch (CursorBoundsException e1) {
+							cursor = null;
+						}
+					}
+				}
+				updateNumberData(currentCarNode.getCar(), "-");
 			} 
 			currentCarNode = currentCarNode.getNext();
 		}

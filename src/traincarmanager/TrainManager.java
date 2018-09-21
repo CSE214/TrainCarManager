@@ -61,10 +61,10 @@ public class TrainManager {
 			removeCar();
 			break;
 		}
-//		case "L": {
-//			setProductLoad();
-//			break;
-//		}
+		case "L": {
+			setProductLoad();
+			break;
+		}
 //		case "S": {
 //			searchForProduct();
 //			break;
@@ -196,7 +196,57 @@ public class TrainManager {
 		printMenu();
 		commandManager();
 	}
-	
+	/**
+	 * Sets the product load at the current position in the list.
+	 * 
+	 * <dl>
+	 * <dt>Postconditions</dt>
+	 * <dd>
+	 * Sets the product load at the current cursor, and returns the user to the main menu.
+	 * </dd>
+	 * </dl>
+	 */
+	public static void setProductLoad() {
+		System.out.print("Enter product name: ");
+		String name = in.nextLine();
+		System.out.print("Enter product weight in tons: ");
+		double weight = Double.parseDouble(in.nextLine());
+		System.out.print("Enter product value in dollars: ");
+		double value = Double.parseDouble(in.nextLine());
+		System.out.print("Is the product dangerous? (y/n): ");
+		String input = in.nextLine().toLowerCase();
+		boolean isDangerous = false;
+		if (input.equals("y")) {
+			isDangerous = true;
+		} else if (input.equals("n")) {
+			isDangerous = false;
+		} else {
+			System.out.println("Please enter 'y' or 'n'.");
+			printMenu();
+			commandManager();
+		}
+		
+		try {
+			train.getCursorData().setLoad(new ProductLoad(name, weight, value, isDangerous));
+			System.out.println(weight + " tons of " + name + " added to the current car.");
+			printMenu();
+			commandManager();
+		} catch (NotPositiveNumberException e) {
+			System.out.println("Weight and value must both be positive.");
+			printMenu();
+			commandManager();
+		}
+	}
+	/**
+	 * Searches the train for all the loads with the indicated name and prints out the total 
+	 * weight and value, and whether the load is dangerous or not. If the product could not be 
+	 * found, indicate to the user that the train does not contain the indicated product.
+	 */
+	public void searchForProduct() {
+		System.out.print("Enter name of product");
+		String productName = in.nextLine();
+		train.findProduct(productName);
+	}
 	/**
 	 * Prints the string representation of the <code>train</code>
 	 * 
