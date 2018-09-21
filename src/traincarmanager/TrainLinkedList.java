@@ -236,10 +236,25 @@ public class TrainLinkedList {
 	 * </dl>
 	 * 
 	 * @return
+	 * 	The removed node
+	 * 
+	 * @throws EmptyListException
+	 * 	if the list is already empty
 	 */
-	public TrainCar removeCursor() {
-		cursor.getPrev().setNext(cursor.getNext());
-		cursor.getNext().setPrev(cursor.getPrev());
+	public TrainCar removeCursor() throws EmptyListException{
+		if (cursor == null) {
+			throw new EmptyListException();
+		}
+		if (cursor.getPrev() != null) {
+			cursor.getPrev().setNext(cursor.getNext());
+		} else if (cursor.getPrev() == null) {
+			head = cursor.getNext();
+		}
+		if (cursor.getNext() != null) {
+			cursor.getNext().setPrev(cursor.getPrev());
+		} else if (cursor.getNext() == null) {
+			tail = cursor.getPrev();
+		}
 		TrainCarNode removedNode = cursor;
 		try {
 			cursorForward();
@@ -247,7 +262,8 @@ public class TrainLinkedList {
 			try {
 				cursorBackward();
 			} catch (CursorBoundsException e1) {
-				System.out.println("The linked list is now empty.");
+				cursor = null;
+				System.out.println("The list is now empty.");
 			}
 		} 
 		updateNumberData(removedNode.getCar(), "-");

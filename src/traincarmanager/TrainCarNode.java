@@ -10,8 +10,8 @@ package traincarmanager;
 *    Stony Brook ID: 110261379
 **/
 public class TrainCarNode {
-	private TrainCarNode prev; // reference to previous node
-	private TrainCarNode next; // reference to next node
+	private TrainCarNode prev = null; // reference to previous node
+	private TrainCarNode next = null; // reference to next node
 	private TrainCar car; // TrainCar the node is wrapping
 	
 	/**

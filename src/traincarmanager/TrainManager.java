@@ -57,10 +57,10 @@ public class TrainManager {
 			insertCar();
 			break;
 		}
-//		case "R": {
-//			removeCar();
-//			break;
-//		}
+		case "R": {
+			removeCar();
+			break;
+		}
 //		case "L": {
 //			setProductLoad();
 //			break;
@@ -170,8 +170,31 @@ public class TrainManager {
 			printMenu();
 			commandManager();
 		}
-		
-		
+	}
+	
+	/**
+	 * Removes the car at current position of the cursor. After deletion, the cursor is set to 
+	 * the next car in the list if one exists, otherwise the previous car. If there is no previous 
+	 * car, the list is empty and the cursor is set to null.
+	 * 
+	 * <dl>
+	 * <dt>Postconditions</dt>
+	 * <dd>
+	 * The new car is inserted into the linked list with the cursor pointing to it. The user
+	 * then returns to the main menu.
+	 * </dd>
+	 * </dl>
+	 * 
+	 */
+	public static void removeCar() {
+		try {
+			train.removeCursor();
+			System.out.println("The car at the cursor has been removed.");
+		} catch (EmptyListException e) {
+			System.out.println("The list is already empty.");
+		}
+		printMenu();
+		commandManager();
 	}
 	
 	/**
