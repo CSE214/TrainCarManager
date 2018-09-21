@@ -60,18 +60,24 @@ public class TrainLinkedList {
 		if (mode == "-") {
 			carCount -= 1;
 			totalLength -= car.getLength();
-			totalValue -= car.getLoad().getValue();
-			totalWeight -= car.getWeight() + car.getLoad().getWeight(); 
-			if(car.getLoad().isDangerous()) {
-				dangerCount -= 1;
+			totalWeight -= car.getWeight();
+			if (car.getLoad() != null) {
+				totalValue -= car.getLoad().getValue();
+				totalWeight -= car.getLoad().getWeight();
+				if(car.getLoad().isDangerous()) {
+					dangerCount -= 1;
+				}
 			}
 		} else if (mode == "+") {
 			carCount += 1;
 			totalLength += car.getLength();
-			totalValue += car.getLoad().getValue();
-			totalWeight += car.getWeight() + car.getLoad().getWeight();
-			if(car.getLoad().isDangerous()) {
-				dangerCount += 1;
+			totalWeight += car.getWeight();
+			if (car.getLoad() != null) {
+				totalValue += car.getLoad().getValue();
+				totalWeight += car.getLoad().getWeight();
+				if(car.getLoad().isDangerous()) {
+					dangerCount += 1;
+				}
 			}
 		}
 	}
@@ -158,6 +164,16 @@ public class TrainLinkedList {
 		}
 		cursor = cursor.getPrev();
 	}
+	
+	/**
+	 * Checks if the cursor is null
+	 * 
+	 * @return
+	 * 	True if the cursor is null, false otherwise
+	 */
+	public boolean cursorIsNull() {
+		return cursor == null;
+	}
 	/**
 	 * Inserts <code>newCar</code> into the train after the cursor position.
 	 * 
@@ -184,19 +200,23 @@ public class TrainLinkedList {
 		TrainCarNode newCarNode = new TrainCarNode(newCar);
 		updateNumberData(newCar, "+");
 		
-		if (cursor.getNext() != null) {
+		if (head == null) {
+			head = newCarNode;
+			tail = newCarNode;
+		} else if (cursor.getNext() != null) {
 			newCarNode.setNext(cursor.getNext());
 			cursor.getNext().setPrev(newCarNode);
+			
+			newCarNode.setPrev(cursor);
+			cursor.setNext(newCarNode);
+		} else if (cursor.getNext() == null){
+			newCarNode.setPrev(cursor);
+			cursor.setNext(newCarNode);
+			tail = newCarNode;
 		}
-		
-		newCarNode.setPrev(cursor);
-		cursor.setNext(newCarNode);
 
-		try {
-			cursorForward();
-		} catch (CursorBoundsException e) {
-			System.out.println("The cursor is out of bounds.");
-		}
+		cursor = newCarNode;
+		
 	}
 	/**
 	 * Removes the <code>TrainCarNode</code> referenced by the cursor and returns the <code>TrainCar</code> contained 
@@ -332,7 +352,29 @@ public class TrainLinkedList {
 	 * load value, and load dangerousness for all of the car on the train.
 	 */
 	public void printManifest() {
-		//PRINT SHIT HERE
+		System.out.println(String.format("%-38s%-65s", "CAR:", "LOAD:"));
+		System.out.println(TrainCar.makeTableHeader() + "  |  " + ProductLoad.makeTableHeader());
+		System.out.println("===================================+======================================================================");
+		
+		TrainCarNode currentNode = head;
+		int loopCounter = 1;
+		while (currentNode != null){
+			if (currentNode.getCar().getLoad() == null) {
+				String name = "Empty";
+				double weight = 0;
+				double value = 0;
+				boolean isDangerous = false;
+				System.out.println(TrainCar.toTableString(loopCounter, currentNode.getCar().getLength(), currentNode.getCar().getWeight()) + "  |  " + ProductLoad.toTableString(name, weight, value, isDangerous));
+			} else {
+				String name = currentNode.getCar().getLoad().getName();
+				double weight = currentNode.getCar().getLoad().getWeight();
+				double value = currentNode.getCar().getLoad().getValue();
+				boolean isDangerous = currentNode.getCar().getLoad().isDangerous();
+				System.out.println(TrainCar.toTableString(loopCounter, currentNode.getCar().getLength(), currentNode.getCar().getWeight()) + "  |  " + ProductLoad.toTableString(name, weight, value, isDangerous));
+			}
+			currentNode = currentNode.getNext();
+			loopCounter += 1;
+		}
 	}
 	/**
 	 * Removes all dangerous cars from the train, maintaining the order of the cars in the train.

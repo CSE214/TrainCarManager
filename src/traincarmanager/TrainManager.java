@@ -53,10 +53,10 @@ public class TrainManager {
 			cursorBackward();
 			break;
 		}
-//		case "I": {
-//			insertCar();
-//			break;
-//		}
+		case "I": {
+			insertCar();
+			break;
+		}
 //		case "R": {
 //			removeCar();
 //			break;
@@ -73,10 +73,10 @@ public class TrainManager {
 			displayTrain();
 			break;
 		}
-//		case "M": {
-//			displayManifest();
-//			break;
-//		}
+		case "M": {
+			displayManifest();
+			break;
+		}
 		case "D": {
 			removeDangerousCars();
 			break;
@@ -140,6 +140,41 @@ public class TrainManager {
 	}
 	
 	/**
+	 * Inserts a new empty car after the cursor. If the cursor is null (i.e. the train is empty), 
+	 * the car is set as the head of the train. After insertion, the cursor is set to the newly 
+	 * inserted car.
+	 * 
+	 * <dl>
+	 * <dt>Postconditions</dt>
+	 * <dd>
+	 * The new car is inserted into the linked list with the cursor pointing to it. The user
+	 * then returns to the main menu.
+	 * </dd>
+	 * </dl>
+	 * 
+	 */
+	private static void insertCar() {
+		System.out.print("Enter car length in meters: ");
+		double length = Double.parseDouble(in.nextLine());
+		System.out.print("Enter car weight in tons: ");
+		double weight = Double.parseDouble(in.nextLine());
+		
+		try {
+			TrainCar newTrainCar = new TrainCar(length, weight);
+			train.insertAfterCursor(newTrainCar);
+			System.out.println("New train car " + length + " meters " + weight + " tons inserted into train.");
+			printMenu();
+			commandManager();
+		} catch (NotPositiveNumberException e) {
+			System.out.println("Invalid length/weight. Inputs must be positive double values");
+			printMenu();
+			commandManager();
+		}
+		
+		
+	}
+	
+	/**
 	 * Prints the string representation of the <code>train</code>
 	 * 
 	 * <dl>
@@ -153,6 +188,12 @@ public class TrainManager {
 	 */
 	private static void displayTrain() {
 		System.out.println(train.toString());
+		printMenu();
+		commandManager();
+	}
+	
+	private static void displayManifest() {
+		train.printManifest();
 		printMenu();
 		commandManager();
 	}

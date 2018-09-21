@@ -15,24 +15,6 @@ public class ProductLoad {
 	private boolean isDangerous; // danger status of load
 	
 	/**
-	 * Forms a string using product data that can be used to print tables.
-	 * 
-	 * @param name
-	 * 	name of the product(s)
-	 * @param weight
-	 * 	weight of the product(s)
-	 * @param value
-	 * 	value of the product(s)
-	 * @param isDangerous
-	 * 	danger status of product(s)
-	 * 
-	 * @return
-	 * 	a table-friendly string representation of the product(s)
-	 */
-	public static String toTableString(String name, double weight, double value, boolean isDangerous) {
-		return String.format("%25s%15s%15s%10s", name, weight, String.format("%.2f", value), isDangerous ? "YES" : "NO");
-	}
-	/**
 	 * @return 
 	 *	The name of this instance
 	 */
@@ -108,7 +90,26 @@ public class ProductLoad {
 	 * 	A header for table containing <code>ProductLoad</code> information
 	 */
 	public static String makeTableHeader() {
-		return String.format("%25s%15s%15s%15s", "Name", "Weight (t)", "Value ($)", "Dangerous");
+		return String.format("%-25s%-15s%-15s%-15s", "Name", "Weight (t)", "Value ($)", "Dangerous");
+	}
+	
+	/**
+	 * Forms a string using product data that can be used to print tables.
+	 * 
+	 * @param name
+	 * 	name of the product(s)
+	 * @param weight
+	 * 	weight of the product(s)
+	 * @param value
+	 * 	value of the product(s)
+	 * @param isDangerous
+	 * 	danger status of product(s)
+	 * 
+	 * @return
+	 * 	a table-friendly string representation of the product(s)
+	 */
+	public static String toTableString(String name, double weight, double value, boolean isDangerous) {
+		return String.format("%-25s%-15s%-15s%-10s", name, weight, String.format("%.2f", value), isDangerous ? "YES" : "NO");
 	}
 	
 	/**
