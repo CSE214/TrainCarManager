@@ -334,8 +334,12 @@ public class TrainLinkedList {
 		TrainCarNode currentCarNode = head;
 		
 		while (currentCarNode != null) {
+			if (currentCarNode.getCar().getLoad() == null) {
+				currentCarNode = currentCarNode.getNext();
+				continue;
+			}
 			ProductLoad product = currentCarNode.getCar().getLoad();
-			if (product.getName() == name) {
+			if (product.getName().toLowerCase().equals(name.toLowerCase())) {
 				totalWeight += product.getWeight();
 				totalValue += product.getValue();
 				if (product.isDangerous()) isDangerous = 1;
@@ -355,7 +359,7 @@ public class TrainLinkedList {
 	 */
 	public void findProduct(String name) {
 		int[] productData = getProductData(name);
-		String header = ProductLoad.makeTableHeader();
+		String header = "\n" + ProductLoad.makeTableHeader();
 		String border = "=========================================================================================";
 		String productString = ProductLoad.toTableString(name, productData[0], productData[1], productData[2] == 1);
 		
@@ -407,10 +411,11 @@ public class TrainLinkedList {
 	 */
 	public void removeDangerousCars() {
 		TrainCarNode currentCarNode = head;
-		System.out.println("This runs");
 		
 		while (currentCarNode != null) {
 			if(currentCarNode.getCar().getLoad() != null && currentCarNode.getCar().getLoad().isDangerous()) {
+				if (currentCarNode == head) head = head.getNext();
+				if (currentCarNode == tail) tail = tail.getPrev();
 				if (currentCarNode.getPrev() != null) currentCarNode.getPrev().setNext(currentCarNode.getNext());
 				if (currentCarNode.getNext() != null) currentCarNode.getNext().setPrev(currentCarNode.getPrev());
 				if (currentCarNode == cursor) {

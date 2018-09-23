@@ -60,9 +60,9 @@ public class TrainCar {
 	 * 	If the passed length or weight is not positive
 	 */
 	public TrainCar(double length, double weight) throws NotPositiveNumberException{
-		if (length < 0) {
+		if (length <= 0) {
 			throw new NotPositiveNumberException("Length should be positive.");
-		} else if (weight < 0) {
+		} else if (weight <= 0) {
 			throw new NotPositiveNumberException("Weight should be positive.");
 		}
 		this.length = length;
@@ -83,9 +83,9 @@ public class TrainCar {
 	 * 	If the passed length or weight is not positive
 	 */
 	public TrainCar(double length, double weight, ProductLoad load) throws NotPositiveNumberException{
-		if (length < 0) {
+		if (length <= 0) {
 			throw new NotPositiveNumberException("Length should be positive.");
-		} else if (weight < 0) {
+		} else if (weight <= 0) {
 			throw new NotPositiveNumberException("Weight should be positive.");
 		}
 		this.length = length;

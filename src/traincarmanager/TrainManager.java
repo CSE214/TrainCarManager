@@ -65,10 +65,10 @@ public class TrainManager {
 			setProductLoad();
 			break;
 		}
-//		case "S": {
-//			searchForProduct();
-//			break;
-//		}
+		case "S": {
+			searchForProduct();
+			break;
+		}
 		case "T": {
 			displayTrain();
 			break;
@@ -155,9 +155,23 @@ public class TrainManager {
 	 */
 	private static void insertCar() {
 		System.out.print("Enter car length in meters: ");
-		double length = Double.parseDouble(in.nextLine());
+		double length = 0;
+		try {
+			length = Double.parseDouble(in.nextLine());
+		} catch (Exception e) {
+			System.out.println("Please enter a double value.");
+			printMenu();
+			commandManager();
+		}
 		System.out.print("Enter car weight in tons: ");
-		double weight = Double.parseDouble(in.nextLine());
+		double weight = 0;
+		try {
+			weight = Double.parseDouble(in.nextLine());
+		} catch (Exception e) {
+			System.out.println("Please enter a double value.");
+			printMenu();
+			commandManager();
+		}
 		
 		try {
 			TrainCar newTrainCar = new TrainCar(length, weight);
@@ -191,7 +205,7 @@ public class TrainManager {
 			train.removeCursor();
 			System.out.println("The car at the cursor has been removed.");
 		} catch (EmptyListException e) {
-			System.out.println("The list is already empty.");
+			System.out.println("No car to set load onto.");
 		}
 		printMenu();
 		commandManager();
@@ -207,12 +221,31 @@ public class TrainManager {
 	 * </dl>
 	 */
 	public static void setProductLoad() {
+		if (train.cursorIsNull()) {
+			System.out.println("There are no cars to carry new load.");
+			printMenu();
+			commandManager();
+		}
 		System.out.print("Enter product name: ");
 		String name = in.nextLine();
 		System.out.print("Enter product weight in tons: ");
-		double weight = Double.parseDouble(in.nextLine());
+		double weight = 0;
+		try {
+			weight = Double.parseDouble(in.nextLine());
+		} catch (Exception e) {
+			System.out.println("Please enter a double.");
+			printMenu();
+			commandManager();
+		}
 		System.out.print("Enter product value in dollars: ");
-		double value = Double.parseDouble(in.nextLine());
+		double value = 0;
+		try {
+			value = Double.parseDouble(in.nextLine());
+		} catch (Exception e) {
+			System.out.println("Please enter a double.");
+			printMenu();
+			commandManager();
+		}
 		System.out.print("Is the product dangerous? (y/n): ");
 		String input = in.nextLine().toLowerCase();
 		boolean isDangerous = false;
@@ -227,7 +260,13 @@ public class TrainManager {
 		}
 		
 		try {
-			train.getCursorData().setLoad(new ProductLoad(name, weight, value, isDangerous));
+			TrainCar currentCar = train.getCursorData();
+			train.updateNumberData(currentCar, "-");
+			if (currentCar.getLoad() != null) {
+				System.out.println("\nReplacing the old load...");
+			}
+			currentCar.setLoad(new ProductLoad(name, weight, value, isDangerous));
+			train.updateNumberData(currentCar, "+");
 			System.out.println(weight + " tons of " + name + " added to the current car.");
 			printMenu();
 			commandManager();
@@ -235,17 +274,31 @@ public class TrainManager {
 			System.out.println("Weight and value must both be positive.");
 			printMenu();
 			commandManager();
-		}
+		} 
 	}
 	/**
 	 * Searches the train for all the loads with the indicated name and prints out the total 
 	 * weight and value, and whether the load is dangerous or not. If the product could not be 
 	 * found, indicate to the user that the train does not contain the indicated product.
+	 * 
+	 * <dl>
+	 * <dt>Postconditions</dt>
+	 * <dd>
+	 * The table is printed, or the "not found" message is shown. The user then returns
+	 * to the main menu.
+	 * </dd>
+	 * </dl>
 	 */
-	public void searchForProduct() {
-		System.out.print("Enter name of product");
+	public static void searchForProduct() {
+		System.out.print("Enter name of product: ");
 		String productName = in.nextLine();
-		train.findProduct(productName);
+		int[] productData = train.getProductData(productName);
+		
+		if (productData[0] == 0) System.out.println("No record of " + productName + " on board train.");
+		else train.findProduct(productName);
+		
+		printMenu();
+		commandManager();
 	}
 	/**
 	 * Prints the string representation of the <code>train</code>
